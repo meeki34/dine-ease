@@ -30,6 +30,19 @@ const MenuItem = sequelize.define('MenuItem', {
   is_available: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
+  },
+  image_url: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  dietary_tags: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: ''
+  },
+  is_special: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
   timestamps: true

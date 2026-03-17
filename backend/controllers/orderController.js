@@ -1,4 +1,5 @@
 const { Order, OrderItem, MenuItem } = require('../models/index');
+const { emitUpdate } = require('../utils/socket');
 
 const VALID_STATUSES = new Set(['pending', 'preparing', 'ready', 'served', 'cancelled']);
 
@@ -101,6 +102,8 @@ exports.createOrder = async (req, res) => {
       }]
     });
 
+    emitUpdate(req.user.tenant_id, 'analytics_update');
+ 
     res.status(201).json({ success: true, data: completeOrder });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -153,6 +156,7 @@ exports.updateOrderStatus = async (req, res) => {
     }
 
     await order.update({ status });
+    emitUpdate(order.tenant_id, 'analytics_update');
     res.json({ success: true, data: order });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

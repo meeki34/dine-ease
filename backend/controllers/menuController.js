@@ -17,7 +17,7 @@ exports.getMenuItems = async (req, res) => {
 // @route   POST /api/menu
 exports.createMenuItem = async (req, res) => {
   try {
-    const { name, description, price, category, is_available } = req.body;
+    const { name, description, price, category, is_available, image_url, dietary_tags, is_special } = req.body;
 
     if (!name || !String(name).trim()) {
       return res.status(400).json({ success: false, message: 'Name is required' });
@@ -37,6 +37,9 @@ exports.createMenuItem = async (req, res) => {
       price: p,
       category: String(category).trim(),
       is_available: is_available === undefined ? true : Boolean(is_available),
+      image_url: image_url || null,
+      dietary_tags: dietary_tags || '',
+      is_special: Boolean(is_special)
     });
 
     res.status(201).json({ success: true, data: item });

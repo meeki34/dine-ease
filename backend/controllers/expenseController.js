@@ -1,5 +1,6 @@
 const { Expense } = require('../models/index');
 const { Op } = require('sequelize');
+const { emitUpdate } = require('../utils/socket');
 
 const num = (v) => {
   const n = Number(v);
@@ -49,6 +50,8 @@ exports.createExpense = async (req, res) => {
       created_by: req.user.id,
     });
 
+    emitUpdate(tenant_id, 'analytics_update');
+ 
     res.status(201).json({ success: true, data: exp });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -76,6 +79,7 @@ exports.updateExpense = async (req, res) => {
     if (expense_date !== undefined) patch.expense_date = String(expense_date);
 
     await exp.update(patch);
+    emitUpdate(tenant_id, 'analytics_update');
     res.json({ success: true, data: exp });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -91,6 +95,7 @@ exports.deleteExpense = async (req, res) => {
     if (!exp) return res.status(404).json({ success: false, message: 'Expense not found' });
 
     await exp.destroy();
+    emitUpdate(tenant_id, 'analytics_update');
     res.json({ success: true, message: 'Expense deleted' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

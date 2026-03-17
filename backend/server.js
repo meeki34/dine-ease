@@ -2,8 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
+const http = require('http');
 const { connectDB } = require('./config/db');
 const { syncDB } = require('./models/index');
+const { initSocket } = require('./utils/socket');
 const authRoutes = require('./routes/authRoutes');
 const menuRoutes = require('./routes/menuRoutes');
 const orderRoutes = require('./routes/orderRoutes');
@@ -21,6 +23,8 @@ dotenv.config();
 
 // Init app
 const app = express();
+const server = http.createServer(app);
+const io = initSocket(server);
 
 // Middleware
 app.use(helmet());
@@ -54,7 +58,7 @@ app.get('/', (req, res) => {
 // Port
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
