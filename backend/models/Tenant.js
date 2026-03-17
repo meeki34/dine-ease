@@ -12,7 +12,7 @@ const Tenant = sequelize.define('Tenant', {
         allowNull: false
     },
     email: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: false,
         unique: true
     },
@@ -29,7 +29,14 @@ const Tenant = sequelize.define('Tenant', {
         defaultValue: true
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    indexes: [
+        {
+            unique: true,
+            name: 'tenant_email_unique',
+            fields: ['email']
+        }
+    ]
 });
 
 module.exports = Tenant;

@@ -51,7 +51,7 @@ exports.createExpense = async (req, res) => {
     });
 
     emitUpdate(tenant_id, 'analytics_update');
- 
+
     res.status(201).json({ success: true, data: exp });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
