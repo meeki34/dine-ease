@@ -17,6 +17,9 @@ const superAdminRoutes = require('./routes/superAdminRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
+const poRoutes = require('./routes/poRoutes');
+const performanceRoutes = require('./routes/performanceRoutes');
 
 // Load env vars
 dotenv.config();
@@ -45,6 +48,9 @@ app.use('/api/superadmin', superAdminRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/pos', poRoutes);
+app.use('/api/performance', performanceRoutes);
 
 // Test route
 app.get('/', (req, res) => {

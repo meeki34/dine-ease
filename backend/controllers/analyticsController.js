@@ -1,4 +1,4 @@
-const { Expense, Order, DailyLog, OrderItem, MenuItem } = require('../models/index');
+const { sequelize, Expense, Order, DailyLog, OrderItem, MenuItem, Ingredient, Recipe, EmployeePerformance, Shift, User } = require('../models/index');
 const { Op, fn, col, literal } = require('sequelize');
 const { emitUpdate } = require('../utils/socket');
 
@@ -80,7 +80,11 @@ exports.getAnalytics = async (req, res) => {
       recentExpenses, 
       dailyLogs,
       topItems,
-      hourlyDistribution
+      hourlyDistribution,
+      fullOrders,
+      lowStockIngredients,
+      performance,
+      completedShifts
     ] = await Promise.all([
       Order.findAll({
         where: orderWhere,
@@ -133,15 +137,81 @@ exports.getAnalytics = async (req, res) => {
         raw: true
       }),
       Order.findAll({
-        where: orderWhere,
         attributes: [
           [fn('HOUR', col('Order.createdAt')), 'hour'],
           [fn('COUNT', col('Order.id')), 'count']
         ],
+        where: orderWhere,
         group: [literal('HOUR(Order.createdAt)')],
         raw: true
+      }),
+      Order.findAll({
+        where: orderWhere,
+        include: [{
+          model: OrderItem,
+          include: [{
+            model: MenuItem,
+            include: [{
+              model: Recipe,
+              include: [Ingredient]
+            }]
+          }]
+        }],
+        order: [['createdAt', 'ASC']]
+      }),
+      Ingredient.findAll({
+        where: {
+          tenant_id,
+          current_quantity: { [Op.lte]: col('low_stock_threshold') },
+          is_active: true
+        },
+        raw: true
+      }),
+      EmployeePerformance.findAll({
+        where: {
+          tenant_id,
+          end_time: { [Op.ne]: null },
+          createdAt: { [Op.between]: [fromDate, toDate] }
+        },
+        include: [{ model: User, attributes: ['name', 'role'] }],
+        attributes: [
+            'user_id',
+            'role',
+            [fn('AVG', sequelize.literal('TIMESTAMPDIFF(SECOND, start_time, end_time)')), 'avg_seconds'],
+            [fn('COUNT', col('EmployeePerformance.id')), 'order_count']
+        ],
+        group: ['user_id', 'EmployeePerformance.role', 'User.id'],
+        raw: true,
+        nest: true
+      }),
+      Shift.findAll({
+        where: {
+          tenant_id,
+          status: 'completed',
+          start_time: { [Op.between]: [fromDate, toDate] }
+        },
+        include: [{ model: User, attributes: ['hourly_wage'] }],
+        raw: true,
+        nest: true
       })
     ]);
+
+    // Calculate daily metrics including COGS
+    const dailyAnalytics = new Map();
+    fullOrders.forEach(order => {
+      const date = toISODate(order.createdAt);
+      if (!dailyAnalytics.has(date)) dailyAnalytics.set(date, { revenue: 0, cogs: 0 });
+      
+      const dayData = dailyAnalytics.get(date);
+      dayData.revenue += Number(order.total_amount || 0);
+      
+      order.OrderItems?.forEach(item => {
+        item.MenuItem?.Recipes?.forEach(recipe => {
+          const cost = Number(recipe.quantity_required || 0) * Number(recipe.Ingredient?.last_purchase_price || 0);
+          dayData.cogs += cost * Number(item.quantity || 0);
+        });
+      });
+    });
 
     const revenueMap = new Map(
       (ordersByDay || []).map((r) => [String(r.date), Number(r.revenue || 0)])
@@ -153,30 +223,51 @@ exports.getAnalytics = async (req, res) => {
       (dailyLogs || []).map((l) => [String(l.log_date), l])
     );
 
+    // Daily labor cost from completed shifts (attribute to start_time day)
+    const laborMap = new Map();
+    (completedShifts || []).forEach((shift) => {
+      const start = new Date(shift.start_time);
+      const end = new Date(shift.end_time);
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return;
+      if (end.getTime() <= start.getTime()) return;
+
+      const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+      const wage = Number(shift.User?.hourly_wage || 0);
+      const cost = hours * (Number.isFinite(wage) ? wage : 0);
+      if (!Number.isFinite(cost) || cost <= 0) return;
+
+      const day = toISODate(start);
+      laborMap.set(day, (laborMap.get(day) || 0) + cost);
+    });
+
     const daysList = enumerateDays(fromDate, toDate);
     const series = daysList.map((date) => {
-      const revenue = revenueMap.get(date) || 0;
+      const dayMetrics = dailyAnalytics.get(date) || { revenue: 0, cogs: 0 };
       const expenses = expenseMap.get(date) || 0;
+      const labor = laborMap.get(date) || 0;
       const log = logMap.get(date) || {};
       return { 
         date, 
-        revenue, 
+        revenue: dayMetrics.revenue,
+        cogs: dayMetrics.cogs,
         expenses, 
-        profit: revenue - expenses,
+        labor,
+        profit: dayMetrics.revenue - dayMetrics.cogs - expenses - labor,
         guests: log.guest_count || 0,
         wastage: log.wastage_count || 0,
-        notes: log.notes || ''
       };
     });
 
     const revenueTotal = series.reduce((s, d) => s + Number(d.revenue || 0), 0);
+    const cogsTotal = series.reduce((s, d) => s + Number(d.cogs || 0), 0);
     const expensesTotal = series.reduce((s, d) => s + Number(d.expenses || 0), 0);
-    const profitTotal = revenueTotal - expensesTotal;
+    const laborTotal = series.reduce((s, d) => s + Number(d.labor || 0), 0);
+
+    const profitTotal = revenueTotal - cogsTotal - expensesTotal - laborTotal;
     
     // Derived Metrics
     const completedOrders = await Order.count({ where: orderWhere });
     const avgCheck = completedOrders > 0 ? revenueTotal / completedOrders : 0;
-    const totalGuests = series.reduce((s, d) => s + (d.guests || 0), 0);
 
     return res.json({
       success: true,
@@ -184,13 +275,15 @@ exports.getAnalytics = async (req, res) => {
         range: { from: fromStr, to: toStr },
         totals: { 
           revenue: revenueTotal, 
+          cogs: cogsTotal,
           expenses: expensesTotal, 
+          labor: laborTotal,
           profit: profitTotal,
           avgCheck: avgCheck,
-          covers: totalGuests,
           orderCount: completedOrders
         },
         byDay: series,
+        performance,
         topItems: (topItems || []).map(i => ({ name: i.name || 'Unknown', count: Number(i.count || 0) })),
         heatmap: (hourlyDistribution || []).map(h => ({ hour: Number(h.hour), count: Number(h.count) })),
         expensesByCategory: (expensesByCategory || []).map((c) => ({
@@ -198,6 +291,13 @@ exports.getAnalytics = async (req, res) => {
           amount: Number(c.amount || 0),
         })),
         recentExpenses,
+        lowStock: (lowStockIngredients || []).map(i => ({
+          id: i.id,
+          name: i.name,
+          unit: i.unit,
+          current_quantity: Number(i.current_quantity),
+          low_stock_threshold: Number(i.low_stock_threshold)
+        }))
       },
     });
   } catch (error) {

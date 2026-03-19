@@ -35,6 +35,10 @@ const User = sequelize.define('User', {
     is_active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+    hourly_wage: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0.00
     }
 }, {
     timestamps: true

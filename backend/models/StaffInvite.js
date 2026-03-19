@@ -18,7 +18,7 @@ const StaffInvite = sequelize.define(
       allowNull: false,
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     role: {
@@ -27,7 +27,7 @@ const StaffInvite = sequelize.define(
       validate: { isIn: [['manager', 'chef', 'waiter']] },
     },
     token_hash: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: false,
       unique: true,
     },

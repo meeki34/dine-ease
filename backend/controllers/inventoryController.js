@@ -1,5 +1,7 @@
 const { Ingredient, InventoryTransaction } = require('../models/index');
 const { Op } = require('sequelize');
+const { emitUpdate } = require('../utils/socket');
+const { checkAndAutoDraftPOs } = require('./poController');
 
 const num = (v) => {
   const n = Number(v);
@@ -132,6 +134,17 @@ exports.adjustIngredient = async (req, res) => {
       before_quantity: before,
       after_quantity: after,
     });
+
+    if (after <= ingredient.low_stock_threshold) {
+      emitUpdate(tenant_id, 'inventory_update', { 
+        ingredient_id: ingredient.id, 
+        name: ingredient.name, 
+        level: after, 
+        threshold: ingredient.low_stock_threshold 
+      });
+      // Trigger Auto-Draft
+      checkAndAutoDraftPOs(tenant_id);
+    }
 
     res.status(201).json({ success: true, data: { ingredient, transaction: tx } });
   } catch (error) {

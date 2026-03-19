@@ -12,7 +12,7 @@ const MenuItem = sequelize.define('MenuItem', {
     allowNull: false
   },
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false
   },
   description: {
@@ -24,7 +24,7 @@ const MenuItem = sequelize.define('MenuItem', {
     allowNull: false
   },
   category: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(100),
     allowNull: false
   },
   is_available: {

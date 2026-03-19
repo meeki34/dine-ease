@@ -1,5 +1,6 @@
 const { Order, OrderItem, MenuItem } = require('../models/index');
 const { emitUpdate } = require('../utils/socket');
+const { checkAndAutoDraftPOs } = require('./poController');
 
 const VALID_STATUSES = new Set(['pending', 'preparing', 'ready', 'served', 'cancelled']);
 
@@ -102,6 +103,17 @@ exports.createOrder = async (req, res) => {
       }]
     });
 
+    // --- PERFORMANCE TRACKING ---
+    const { EmployeePerformance } = require('../models/index');
+    await EmployeePerformance.create({
+      user_id: req.user.id,
+      order_id: order.id,
+      role: 'waiter',
+      start_time: new Date(),
+      tenant_id: req.user.tenant_id
+    });
+    // ----------------------------
+
     emitUpdate(req.user.tenant_id, 'analytics_update');
  
     res.status(201).json({ success: true, data: completeOrder });
@@ -155,8 +167,88 @@ exports.updateOrderStatus = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Status change not allowed for this role' });
     }
 
+    // --- STOCK DEDUCTION LOGIC ---
+    const FULFILLMENT_STATUSES = ['ready', 'served'];
+    const alreadyFilled = FULFILLMENT_STATUSES.includes(currentStatus);
+    const becomingFilled = FULFILLMENT_STATUSES.includes(nextStatus);
+
+    if (!alreadyFilled && becomingFilled) {
+      const { OrderItem, Recipe, Ingredient, InventoryTransaction } = require('../models/index');
+      
+      const orderItems = await OrderItem.findAll({
+        where: { order_id: order.id },
+        include: [{
+          model: MenuItem,
+          include: [Recipe]
+        }]
+      });
+
+      for (const item of orderItems) {
+        const recipes = item.MenuItem?.Recipes || [];
+        for (const recipe of recipes) {
+          const ingredient = await Ingredient.findByPk(recipe.ingredient_id);
+          if (ingredient) {
+            const deduction = Number(recipe.quantity_required) * Number(item.quantity);
+            await ingredient.decrement('current_quantity', { by: deduction });
+            
+            // Log transaction
+            await InventoryTransaction.create({
+              ingredient_id: ingredient.id,
+              type: 'OUT',
+              quantity: deduction,
+              reason: `Order #${order.id} consumption`,
+              tenant_id: order.tenant_id
+            });
+
+            // Emit update for inventory trackers
+            emitUpdate(order.tenant_id, 'inventory_update', { 
+              ingredient_id: ingredient.id, 
+              name: ingredient.name,
+              level: ingredient.current_quantity - deduction 
+            });
+          }
+        }
+      }
+      // Trigger Auto-Draft Check
+      if (order.tenant_id) {
+        checkAndAutoDraftPOs(order.tenant_id);
+      }
+    }
+    // ----------------------------
+
+    // --- PERFORMANCE TRACKING ---
+    const { EmployeePerformance } = require('../models/index');
+    if (nextStatus === 'preparing' && role === 'chef') {
+      await EmployeePerformance.create({
+        user_id: req.user.id,
+        order_id: order.id,
+        role: 'chef',
+        start_time: new Date(),
+        tenant_id: order.tenant_id
+      });
+    } else if (nextStatus === 'ready' && (role === 'chef' || role === 'admin' || role === 'manager')) {
+      const perf = await EmployeePerformance.findOne({
+        where: { order_id: order.id, role: 'chef', end_time: null },
+        order: [['createdAt', 'DESC']]
+      });
+      if (perf) {
+        await perf.update({ end_time: new Date() });
+      }
+    } else if (nextStatus === 'served' && (role === 'waiter' || role === 'admin' || role === 'manager')) {
+      const perf = await EmployeePerformance.findOne({
+        where: { order_id: order.id, role: 'waiter', end_time: null },
+        order: [['createdAt', 'DESC']]
+      });
+      if (perf) {
+        await perf.update({ end_time: new Date() });
+      }
+    }
+    // ----------------------------
+
     await order.update({ status });
     emitUpdate(order.tenant_id, 'analytics_update');
+    emitUpdate(order.tenant_id, 'order_updated', { order_id: order.id, status: nextStatus });
+
     res.json({ success: true, data: order });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

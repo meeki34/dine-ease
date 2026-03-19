@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 
-const Ingredient = sequelize.define(
-  'Ingredient',
+const Supplier = sequelize.define(
+  'Supplier',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -17,30 +17,25 @@ const Ingredient = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    unit: {
-      // e.g. kg, g, l, pcs
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'pcs',
-    },
-    current_quantity: {
-      type: DataTypes.DECIMAL(12, 3),
-      allowNull: false,
-      defaultValue: 0,
-    },
-    low_stock_threshold: {
-      type: DataTypes.DECIMAL(12, 3),
-      allowNull: false,
-      defaultValue: 0,
-    },
-    preferred_supplier_id: {
-      type: DataTypes.INTEGER,
+    contact_name: {
+      type: DataTypes.STRING(255),
       allowNull: true,
     },
-    last_purchase_price: {
-      type: DataTypes.DECIMAL(12, 2),
+    email: {
+      type: DataTypes.STRING(255),
       allowNull: true,
-      defaultValue: 0,
+    },
+    phone: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    address: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    payment_terms: {
+      type: DataTypes.STRING, // e.g., Net 30, COD
+      allowNull: true,
     },
     is_active: {
       type: DataTypes.BOOLEAN,
@@ -52,10 +47,8 @@ const Ingredient = sequelize.define(
     indexes: [
       { fields: ['tenant_id'] },
       { fields: ['tenant_id', 'name'] },
-      { fields: ['is_active'] },
     ],
   }
 );
 
-module.exports = Ingredient;
-
+module.exports = Supplier;
