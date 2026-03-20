@@ -1,4 +1,4 @@
-const { PurchaseOrder, PurchaseOrderItem, Ingredient, Supplier, sequelize } = require('../models/index');
+const { PurchaseOrder, PurchaseOrderItem, Ingredient, Supplier, InventoryTransaction, sequelize } = require('../models/index');
 const { Op } = require('sequelize');
 
 // @desc    Get all POs
@@ -109,7 +109,11 @@ exports.checkAndAutoDraftPOs = async (tenant_id) => {
               total_price: (item.low_stock_threshold * 2) * (item.last_purchase_price || 0)
             }
           });
-          // Update total amount if needed (simplified here)
+          // Update total amount
+          const lineTotal = (item.low_stock_threshold * 2) * (item.last_purchase_price || 0);
+          await existingDraft.update({
+            total_amount: Number(existingDraft.total_amount) + lineTotal
+          });
         }
       } else {
         // Create new draft
@@ -177,7 +181,6 @@ exports.updatePOStatus = async (req, res) => {
           }, { transaction: t });
           
           // Log transaction
-          const { InventoryTransaction } = require('../models/index');
           await InventoryTransaction.create({
             tenant_id,
             ingredient_id: ingredient.id,

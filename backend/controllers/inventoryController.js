@@ -35,7 +35,7 @@ exports.listIngredients = async (req, res) => {
 exports.createIngredient = async (req, res) => {
   try {
     const tenant_id = req.user.tenant_id;
-    const { name, unit, current_quantity, low_stock_threshold } = req.body;
+    const { name, unit, current_quantity, low_stock_threshold, preferred_supplier_id, last_purchase_price } = req.body;
 
     if (!name || !String(name).trim()) {
       return res.status(400).json({ success: false, message: 'Name is required' });
@@ -47,6 +47,8 @@ exports.createIngredient = async (req, res) => {
       unit: String(unit || 'pcs').trim(),
       current_quantity: Number.isFinite(num(current_quantity)) ? num(current_quantity) : 0,
       low_stock_threshold: Number.isFinite(num(low_stock_threshold)) ? num(low_stock_threshold) : 0,
+      preferred_supplier_id: preferred_supplier_id || null,
+      last_purchase_price: Number.isFinite(num(last_purchase_price)) ? num(last_purchase_price) : 0,
       is_active: true,
     });
 
@@ -64,7 +66,7 @@ exports.updateIngredient = async (req, res) => {
     const ingredient = await Ingredient.findOne({ where: { id: req.params.id, tenant_id } });
     if (!ingredient) return res.status(404).json({ success: false, message: 'Ingredient not found' });
 
-    const { name, unit, low_stock_threshold } = req.body;
+    const { name, unit, low_stock_threshold, preferred_supplier_id, last_purchase_price } = req.body;
     const patch = {};
     if (name !== undefined) patch.name = String(name).trim();
     if (unit !== undefined) patch.unit = String(unit).trim();
@@ -72,6 +74,11 @@ exports.updateIngredient = async (req, res) => {
       const t = num(low_stock_threshold);
       if (!Number.isFinite(t) || t < 0) return res.status(400).json({ success: false, message: 'Invalid threshold' });
       patch.low_stock_threshold = t;
+    }
+    if (preferred_supplier_id !== undefined) patch.preferred_supplier_id = preferred_supplier_id || null;
+    if (last_purchase_price !== undefined) {
+      const p = num(last_purchase_price);
+      if (Number.isFinite(p) && p >= 0) patch.last_purchase_price = p;
     }
 
     await ingredient.update(patch);
@@ -143,7 +150,7 @@ exports.adjustIngredient = async (req, res) => {
         threshold: ingredient.low_stock_threshold 
       });
       // Trigger Auto-Draft
-      checkAndAutoDraftPOs(tenant_id);
+      await checkAndAutoDraftPOs(tenant_id);
     }
 
     res.status(201).json({ success: true, data: { ingredient, transaction: tx } });
