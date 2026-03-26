@@ -1,5 +1,6 @@
 const { PurchaseOrder, PurchaseOrderItem, Ingredient, Supplier, InventoryTransaction, sequelize } = require('../models/index');
 const { Op } = require('sequelize');
+const { emitUpdate } = require('../utils/socket');
 
 // @desc    Get all POs
 // @route   GET /api/pos
@@ -59,6 +60,7 @@ exports.createPO = async (req, res) => {
     await po.update({ total_amount: total }, { transaction: t });
 
     await t.commit();
+    emitUpdate(tenant_id, 'po_updated');
     res.status(201).json({ success: true, data: po });
   } catch (error) {
     await t.rollback();
@@ -115,6 +117,7 @@ exports.checkAndAutoDraftPOs = async (tenant_id) => {
             total_amount: Number(existingDraft.total_amount) + lineTotal
           });
         }
+        emitUpdate(tenant_id, 'po_updated');
       } else {
         // Create new draft
         const t = await sequelize.transaction();
@@ -142,6 +145,7 @@ exports.checkAndAutoDraftPOs = async (tenant_id) => {
           }
           await po.update({ total_amount: total }, { transaction: t });
           await t.commit();
+          emitUpdate(tenant_id, 'po_updated');
         } catch (err) {
           await t.rollback();
           console.error('Auto-Draft Error:', err);
@@ -186,7 +190,10 @@ exports.updatePOStatus = async (req, res) => {
             ingredient_id: ingredient.id,
             type: 'in',
             quantity: item.quantity,
-            note: `Received from PO: ${po.po_number}`
+            note: `Received from PO: ${po.po_number}`,
+            created_by: req.user.id,
+            before_quantity: ingredient.current_quantity,
+            after_quantity: Number(ingredient.current_quantity) + Number(item.quantity)
           }, { transaction: t });
         }
       }
@@ -194,6 +201,10 @@ exports.updatePOStatus = async (req, res) => {
     }
 
     await t.commit();
+    emitUpdate(tenant_id, 'po_updated');
+    if (status === 'received' && oldStatus !== 'received') {
+      emitUpdate(tenant_id, 'inventory_update');
+    }
     res.json({ success: true, data: po });
   } catch (error) {
     await t.rollback();

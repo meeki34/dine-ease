@@ -1,4 +1,5 @@
 const { MenuItem } = require('../models/index');
+const { emitUpdate } = require('../utils/socket');
 
 // @desc    Get all menu items
 // @route   GET /api/menu
@@ -42,6 +43,8 @@ exports.createMenuItem = async (req, res) => {
       is_special: Boolean(is_special)
     });
 
+    emitUpdate(req.user.tenant_id, 'menu_updated');
+
     res.status(201).json({ success: true, data: item });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -64,6 +67,7 @@ exports.updateMenuItem = async (req, res) => {
     }
 
     await item.update(req.body);
+    emitUpdate(req.user.tenant_id, 'menu_updated');
     res.json({ success: true, data: item });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -86,6 +90,7 @@ exports.deleteMenuItem = async (req, res) => {
     }
 
     await item.destroy();
+    emitUpdate(req.user.tenant_id, 'menu_updated');
     res.json({ success: true, message: 'Item deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
