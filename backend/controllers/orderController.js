@@ -194,10 +194,13 @@ exports.updateOrderStatus = async (req, res) => {
             // Log transaction
             await InventoryTransaction.create({
               ingredient_id: ingredient.id,
-              type: 'OUT',
+              type: 'out',
               quantity: deduction,
-              reason: `Order #${order.id} consumption`,
-              tenant_id: order.tenant_id
+              note: `Order #${order.id} consumption`,
+              tenant_id: order.tenant_id,
+              created_by: req.user.id,
+              before_quantity: ingredient.current_quantity,
+              after_quantity: Number(ingredient.current_quantity) - deduction
             });
 
             // Emit update for inventory trackers

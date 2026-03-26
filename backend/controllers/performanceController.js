@@ -37,6 +37,13 @@ exports.getEmployeeStats = async (req, res) => {
             where.user_id = id;
         }
 
+        // Guard: check if any records exist before running the GROUP BY aggregation
+        // (avoids MySQL strict mode errors on empty datasets)
+        const count = await EmployeePerformance.count({ where });
+        if (count === 0) {
+            return res.json({ success: true, data: [] });
+        }
+
         const stats = await EmployeePerformance.findAll({
             where,
             include: [{ model: User, attributes: ['name', 'role'] }],

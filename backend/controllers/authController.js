@@ -72,7 +72,7 @@ exports.login = async (req, res) => {
 
         const user = await User.findOne({ 
             where: { email },
-            include: [{ model: Tenant, attributes: ['id', 'name'] }]
+            include: [{ model: Tenant, attributes: ['id', 'name', 'currency'] }]
         });
         if (!user) {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
@@ -101,7 +101,8 @@ exports.login = async (req, res) => {
                 email: user.email,
                 role: user.role,
                 tenant_id: user.tenant_id,
-                tenant_name: user.Tenant?.name
+                tenant_name: user.Tenant?.name,
+                tenant_currency: user.Tenant?.currency
             }
         });
 
@@ -116,12 +117,13 @@ exports.getMe = async (req, res) => {
     try {
         const user = await User.findByPk(req.user.id, {
             attributes: { exclude: ['password'] },
-            include: [{ model: Tenant, attributes: ['id', 'name'] }]
+            include: [{ model: Tenant, attributes: ['id', 'name', 'currency'] }]
         });
         
         let userData = user.toJSON();
         if (user.Tenant) {
             userData.tenant_name = user.Tenant.name;
+            userData.tenant_currency = user.Tenant.currency;
         }
 
         res.json({ success: true, user: userData });

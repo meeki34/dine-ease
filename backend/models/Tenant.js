@@ -27,6 +27,11 @@ const Tenant = sequelize.define('Tenant', {
     is_active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+    currency: {
+        type: DataTypes.STRING(3),
+        allowNull: false,
+        defaultValue: 'INR'
     }
 }, {
     timestamps: true,
