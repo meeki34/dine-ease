@@ -29,7 +29,7 @@ const Order = sequelize.define('Order', {
   },
   created_by: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   }
 }, {
   timestamps: true

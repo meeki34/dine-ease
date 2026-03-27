@@ -21,6 +21,7 @@ const supplierRoutes = require('./routes/supplierRoutes');
 const poRoutes = require('./routes/poRoutes');
 const performanceRoutes = require('./routes/performanceRoutes');
 const tenantRoutes = require('./routes/tenantRoutes');
+const publicRoutes = require('./routes/publicRoutes');
 // Load env vars
 dotenv.config();
 
@@ -52,6 +53,7 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/pos', poRoutes);
 app.use('/api/performance', performanceRoutes);
 app.use('/api/tenant', tenantRoutes);
+app.use('/api/public', publicRoutes);
 
 // Test route
 app.get('/', (req, res) => {
