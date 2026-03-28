@@ -3,6 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
 const http = require('http');
+const path = require('path');
+const fs = require('fs');
 const { connectDB } = require('./config/db');
 const { syncDB } = require('./models/index');
 const { initSocket } = require('./utils/socket');
@@ -22,8 +24,15 @@ const poRoutes = require('./routes/poRoutes');
 const performanceRoutes = require('./routes/performanceRoutes');
 const tenantRoutes = require('./routes/tenantRoutes');
 const publicRoutes = require('./routes/publicRoutes');
+const billingRoutes = require('./routes/billingRoutes');
 // Load env vars
 dotenv.config();
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads', 'menu');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 // Init app
 const app = express();
@@ -31,10 +40,13 @@ const server = http.createServer(app);
 const io = initSocket(server);
 
 // Middleware
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 // Routes
@@ -54,6 +66,7 @@ app.use('/api/pos', poRoutes);
 app.use('/api/performance', performanceRoutes);
 app.use('/api/tenant', tenantRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api/billing', billingRoutes);
 
 // Test route
 app.get('/', (req, res) => {

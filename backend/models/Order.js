@@ -30,6 +30,11 @@ const Order = sequelize.define('Order', {
   created_by: {
     type: DataTypes.INTEGER,
     allowNull: true
+  },
+  bill_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    defaultValue: null
   }
 }, {
   timestamps: true

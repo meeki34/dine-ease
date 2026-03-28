@@ -16,6 +16,7 @@ const PurchaseOrder = require('./PurchaseOrder');
 const PurchaseOrderItem = require('./PurchaseOrderItem');
 const EmployeePerformance = require('./EmployeePerformance');
 const Shift = require('./Shift');
+const Bill = require('./Bill');
 
 // Associations
 Tenant.hasMany(Order, { foreignKey: 'tenant_id' });
@@ -91,6 +92,13 @@ EmployeePerformance.belongsTo(Tenant, { foreignKey: 'tenant_id' });
 Tenant.hasMany(Shift, { foreignKey: 'tenant_id' });
 Shift.belongsTo(Tenant, { foreignKey: 'tenant_id' });
 
+// Billing associations
+Tenant.hasMany(Bill, { foreignKey: 'tenant_id' });
+Bill.belongsTo(Tenant, { foreignKey: 'tenant_id' });
+
+Bill.hasMany(Order, { foreignKey: 'bill_id' });
+Order.belongsTo(Bill, { foreignKey: 'bill_id' });
+
 // Sync all models
 const syncDB = async () => {
     try {
@@ -120,5 +128,6 @@ module.exports = {
     PurchaseOrderItem,
     EmployeePerformance,
     Shift,
+    Bill,
     syncDB
 };
