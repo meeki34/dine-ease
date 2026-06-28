@@ -1,0 +1,29 @@
+.pretext-hero-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  height: 340px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.pretext-hero-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+  .pretext-hero-wrapper {
+    max-width: 100%;
+    height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pretext-hero-wrapper {
+    height: 220px;
+  }
+}

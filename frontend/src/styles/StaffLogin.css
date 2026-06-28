@@ -1,0 +1,368 @@
+.staff-login-container {
+  min-height: 100vh;
+  background: #1a140e;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background glow effects */
+.staff-login-container::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(244, 140, 37, 0.15) 0%, transparent 70%);
+  top: -100px;
+  right: -100px;
+  border-radius: 50%;
+}
+
+.staff-login-container::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(244, 140, 37, 0.1) 0%, transparent 70%);
+  bottom: -50px;
+  left: -50px;
+  border-radius: 50%;
+}
+
+/* Glass Card */
+.staff-login-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(244, 140, 37, 0.2);
+  border-radius: 24px;
+  padding: 48px;
+  width: 100%;
+  max-width: 460px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: transform 0.4s cubic-bezier(.22,.68,0,1.2), box-shadow 0.4s ease, border-color 0.4s ease;
+  text-align: center;
+}
+
+.staff-login-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 72px rgba(244, 140, 37, 0.15), 0 0 44px rgba(255, 215, 0, 0.10), 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 215, 0, 0.30);
+}
+
+/* Badge */
+.staff-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(244, 140, 37, 0.15);
+  border: 1px solid rgba(244, 140, 37, 0.3);
+  border-radius: 999px;
+  color: #f48c25;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.staff-badge:hover {
+  background: rgba(244, 140, 37, 0.22);
+  border-color: rgba(255, 215, 0, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(244, 140, 37, 0.15), 0 0 20px rgba(255, 215, 0, 0.12);
+}
+
+.staff-login-card h1 {
+  font-size: 32px;
+  font-weight: 900;
+  color: white;
+  margin: 0 0 8px 0;
+}
+
+.staff-login-card .subtitle {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+  margin: 0 0 32px 0;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+
+/* Glass Input */
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(244, 140, 37, 0.15);
+  border-radius: 12px;
+  padding: 0 16px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.input-wrapper:hover {
+  border-color: rgba(255, 215, 0, 0.25);
+  background: rgba(244, 140, 37, 0.04);
+  box-shadow: 0 4px 18px rgba(244, 140, 37, 0.06), 0 0 14px rgba(255, 215, 0, 0.06);
+}
+
+/* Glowing transparent effect on focus */
+.input-wrapper:focus-within {
+  background: rgba(244, 140, 37, 0.05);
+  border-color: #f48c25;
+  box-shadow: 0 0 0 3px rgba(244, 140, 37, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.input-icon {
+  margin-right: 12px;
+  opacity: 0.6;
+  color: rgba(255, 255, 255, 0.6);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.input-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.form-group input {
+  flex: 1;
+  width: 100%;
+  padding: 14px 0;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: white;
+  text-align: left;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Autofill fixes */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group input:-webkit-autofill:active {
+  -webkit-text-fill-color: white;
+  caret-color: white;
+  box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.3) inset;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.3) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+.eye-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.2s;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+.eye-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.eye-toggle:hover {
+  opacity: 1;
+}
+
+/* Sign In Button */
+.staff-login-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #f48c25, #ffaa55);
+  color: #1a140e;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(244, 140, 37, 0.3);
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.staff-login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.55s ease;
+}
+
+.staff-login-btn:hover::before {
+  left: 100%;
+}
+
+.staff-login-btn:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.06);
+  box-shadow: 0 0 50px rgba(244, 140, 37, 0.5), 0 16px 40px rgba(244, 140, 37, 0.18), 0 0 36px rgba(255, 215, 0, 0.20);
+}
+
+.staff-login-btn:active {
+  transform: translateY(0);
+}
+
+.staff-login-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 12px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Links */
+.staff-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.staff-links a,
+.staff-links span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.25s ease, transform 0.25s ease, text-shadow 0.25s ease;
+  position: relative;
+}
+
+.staff-links a::after,
+.staff-links span::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, #f48c25, #ffaa55);
+  transition: width 0.3s ease, left 0.3s ease;
+  border-radius: 999px;
+}
+
+.staff-links a:hover,
+.staff-links span:hover {
+  color: #f48c25;
+  transform: translateY(-2px);
+  text-shadow: 0 0 18px rgba(244, 140, 37, 0.2);
+}
+
+.staff-links a:hover::after,
+.staff-links span:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Footer badges */
+.staff-footer-badges {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  flex-wrap: wrap;
+}
+
+.footer-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 6px 10px;
+  border-radius: 10px;
+  transition: color 0.25s ease, background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+}
+
+.footer-badge:hover {
+  color: rgba(255, 215, 0, 0.95);
+  background: rgba(255, 215, 0, 0.06);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 14px rgba(255, 215, 0, 0.10), 0 0 18px rgba(255, 215, 0, 0.06);
+}
+
+.footer-badge:hover svg {
+  color: rgba(244, 140, 37, 0.9);
+}
+
+.footer-badge svg {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.45);
+  flex-shrink: 0;
+  transition: color 0.25s ease;
+}
+
+/* Error */
+.error-msg {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}

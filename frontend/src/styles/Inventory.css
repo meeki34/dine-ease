@@ -1,0 +1,347 @@
+.inv-page {
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.inv-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.inv-head h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 950;
+  color: white;
+}
+
+.inv-head p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+}
+
+.inv-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--de-accent), var(--de-accent-2));
+  color: #120f0a;
+  font-weight: 950;
+  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.18);
+}
+
+.inv-ico {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inv-ico svg {
+  width: 18px;
+  height: 18px;
+}
+
+.inv-error {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.inv-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.inv-stat {
+  background: #120d08;
+  border: 1px solid rgba(245, 158, 11, 0.12);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.inv-stat.danger {
+  border-color: rgba(231, 76, 60, 0.22);
+}
+
+.inv-stat-val {
+  font-size: 24px;
+  font-weight: 950;
+  color: var(--de-accent-2);
+}
+
+.inv-stat.danger .inv-stat-val {
+  color: #e74c3c;
+}
+
+.inv-stat-label {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.inv-loading,
+.inv-empty {
+  padding: 18px 0;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.inv-table {
+  background: #120d08;
+  border: 1px solid rgba(245, 158, 11, 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.inv-row {
+  display: grid;
+  grid-template-columns: 2fr 0.8fr 0.8fr 0.8fr 2.4fr;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.06);
+  align-items: center;
+}
+
+.inv-row:last-child {
+  border-bottom: none;
+}
+
+.inv-row-head {
+  background: rgba(245, 158, 11, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.inv-row.low {
+  box-shadow: inset 4px 0 0 rgba(231, 76, 60, 0.65);
+}
+
+.inv-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.inv-name-main {
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inv-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  background: rgba(231, 76, 60, 0.12);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.inv-muted {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 700;
+}
+
+.inv-qty {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 900;
+}
+
+.inv-actions {
+  min-width: 0;
+}
+
+.inv-btn {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 12px;
+}
+
+.inv-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.inv-btn.primary {
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.22);
+  color: var(--de-accent-2);
+}
+
+.inv-btn.primary:hover {
+  background: rgba(245, 158, 11, 0.22);
+}
+
+.inv-btn.ghost {
+  background: transparent;
+}
+
+.inv-btn.danger {
+  color: #e74c3c;
+}
+
+.inv-btn.danger:hover {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.2);
+}
+
+.inv-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inv-actions-row {
+  display: flex;
+  gap: 8px;
+}
+
+.inv-adjust {
+  display: grid;
+  grid-template-columns: 0.9fr 0.7fr 1.2fr auto auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.inv-adjust select,
+.inv-adjust input,
+.inv-field input {
+  height: 36px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.05);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0 12px;
+  font-size: 12px;
+  width: 100%;
+}
+
+.inv-adjust input::placeholder,
+.inv-field input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* Modal */
+.inv-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.inv-modal {
+  width: 100%;
+  max-width: 560px;
+  background: #120d08;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+.inv-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.inv-modal-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 950;
+  color: white;
+}
+
+.inv-modal-close {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.65);
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.inv-form-error {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  margin-bottom: 12px;
+}
+
+.inv-field {
+  margin-bottom: 12px;
+}
+
+.inv-field-row {
+  display: grid;
+  grid-template-columns: 0.7fr 1fr 1fr;
+  gap: 12px;
+}
+
+.inv-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.inv-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+@media (max-width: 980px) {
+  .inv-row {
+    grid-template-columns: 2fr 0.8fr 0.8fr 0.8fr 2fr;
+  }
+  .inv-adjust {
+    grid-template-columns: 1fr 0.8fr 1.2fr;
+    grid-auto-rows: 36px;
+  }
+  .inv-adjust .inv-btn {
+    grid-column: span 1;
+  }
+}
+

@@ -4,8 +4,9 @@ const { connectDB } = require('../config/db');
 const { syncDB, Tenant, User } = require('../models');
 
 const isProd = (process.env.NODE_ENV || '').toLowerCase() === 'production';
-if (isProd) {
-  console.error('Refusing to run seed in production (NODE_ENV=production).');
+const allowProdSeed = process.env.ALLOW_PROD_SEED === 'true';
+if (isProd && !allowProdSeed) {
+  console.error('Refusing to run seed in production (NODE_ENV=production) unless ALLOW_PROD_SEED=true is set.');
   process.exit(1);
 }
 
@@ -14,6 +15,7 @@ const DEFAULT_PASSWORDS = {
   admin: process.env.SEED_ADMIN_PASSWORD || 'Admin@1234',
   manager: process.env.SEED_MANAGER_PASSWORD || 'Manager@1234',
   chef: process.env.SEED_CHEF_PASSWORD || 'Chef@1234',
+  waiter: process.env.SEED_WAITER_PASSWORD || 'Waiter@1234',
 };
 
 const hashPassword = async (plain) => {
@@ -105,6 +107,14 @@ const main = async () => {
       password: DEFAULT_PASSWORDS.chef,
     },
     {
+      label: 'Tenant1 Waiter',
+      tenant_id: tenant1.id,
+      name: 'Demo Waiter',
+      email: 'waiter@demo-bistro.test',
+      role: 'waiter',
+      password: DEFAULT_PASSWORDS.waiter,
+    },
+    {
       label: 'Tenant2 Admin',
       tenant_id: tenant2.id,
       name: 'Amber Admin',
@@ -119,6 +129,14 @@ const main = async () => {
       email: 'chef@amber-lounge.test',
       role: 'chef',
       password: DEFAULT_PASSWORDS.chef,
+    },
+    {
+      label: 'Tenant2 Waiter',
+      tenant_id: tenant2.id,
+      name: 'Amber Waiter',
+      email: 'waiter@amber-lounge.test',
+      role: 'waiter',
+      password: DEFAULT_PASSWORDS.waiter,
     },
   ];
 
@@ -153,4 +171,3 @@ main().catch((err) => {
   console.error('Seed failed:', err);
   process.exit(1);
 });
-

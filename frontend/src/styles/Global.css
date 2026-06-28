@@ -1,0 +1,64 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --de-bg: #0b0a08;
+  --de-bg-2: #0f0d0a;
+  --de-surface: rgba(255, 255, 255, 0.04);
+  --de-surface-2: rgba(255, 255, 255, 0.06);
+  --de-border: rgba(245, 158, 11, 0.14);
+  --de-text: #f6f2ea;
+  --de-muted: rgba(246, 242, 234, 0.72);
+  --de-muted-2: rgba(246, 242, 234, 0.56);
+  --de-accent: #f59e0b;
+  --de-accent-2: #ffb34d;
+  --de-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  --de-radius-lg: 18px;
+  --de-radius-xl: 24px;
+  --de-ring: 0 0 0 4px rgba(245, 158, 11, 0.18);
+}
+
+body {
+  background: #f0f2f5;
+  color: #333;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+input, select, textarea {
+  outline: none;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #e74c3c;
+}
+
+.error-msg {
+  background: #ffe0e0;
+  color: #e74c3c;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.success-msg {
+  background: #e0ffe0;
+  color: #27ae60;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}

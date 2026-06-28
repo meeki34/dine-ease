@@ -14,6 +14,7 @@ const canSetStatus = ({ role, currentStatus, nextStatus }) => {
     if (currentStatus === 'served' || currentStatus === 'cancelled') return false;
     if (nextStatus === 'preparing') return currentStatus === 'pending';
     if (nextStatus === 'ready') return currentStatus === 'pending' || currentStatus === 'preparing';
+    if (nextStatus === 'served') return currentStatus === 'ready';
     return false;
   }
 

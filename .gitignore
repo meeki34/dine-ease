@@ -1,6 +1,21 @@
-node_modules
-backend/node_modules
-frontend/node_modules
+node_modules/
+
+# Local environment files
 .env
-.env.local
-.env.example    
+.env.*
+!.env.example
+
+# Build and test output
+build/
+dist/
+coverage/
+*.log
+test-output.txt
+test-full.txt
+build_output.txt
+
+# Runtime uploads
+backend/uploads/
+
+# Lock file (root only)
+package-lock.json

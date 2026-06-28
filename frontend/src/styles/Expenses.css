@@ -1,0 +1,295 @@
+.exp-page {
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.exp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.exp-head h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 950;
+  color: white;
+}
+
+.exp-head p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+}
+
+.exp-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--de-accent), var(--de-accent-2));
+  color: #120f0a;
+  font-weight: 950;
+  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.18);
+}
+
+.exp-ico {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exp-ico svg {
+  width: 18px;
+  height: 18px;
+}
+
+.exp-error {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.exp-stats {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.exp-stat {
+  background: #120d08;
+  border: 1px solid rgba(245, 158, 11, 0.12);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.exp-stat-ico {
+  width: 36px;
+  height: 36px;
+  border-radius: 14px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  color: var(--de-accent-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exp-stat-ico svg {
+  width: 18px;
+  height: 18px;
+}
+
+.exp-stat-val {
+  font-size: 22px;
+  font-weight: 950;
+  color: white;
+}
+
+.exp-stat-label {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.exp-loading,
+.exp-empty {
+  padding: 18px 0;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.exp-table {
+  background: #120d08;
+  border: 1px solid rgba(245, 158, 11, 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.exp-row {
+  display: grid;
+  grid-template-columns: 0.9fr 1fr 2fr 0.9fr;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.06);
+  align-items: center;
+}
+
+.exp-row:last-child {
+  border-bottom: none;
+}
+
+.exp-row-head {
+  background: rgba(245, 158, 11, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exp-muted {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 700;
+}
+
+.exp-cat {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 900;
+}
+
+.exp-desc {
+  color: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exp-amt {
+  font-weight: 950;
+  text-align: right;
+}
+
+/* Modal */
+.exp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.exp-modal {
+  width: 100%;
+  max-width: 560px;
+  background: #120d08;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+.exp-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.exp-modal-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 950;
+  color: white;
+}
+
+.exp-modal-close {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.65);
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.exp-form-error {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  margin-bottom: 12px;
+}
+
+.exp-field {
+  margin-bottom: 12px;
+}
+
+.exp-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.exp-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exp-field input,
+.exp-field select {
+  width: 100%;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.05);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0 12px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.exp-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.exp-btn {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+
+.exp-btn.primary {
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.22);
+  color: var(--de-accent-2);
+}
+
+.exp-btn.primary:hover {
+  background: rgba(245, 158, 11, 0.22);
+}
+
+.exp-btn.ghost {
+  background: transparent;
+}
+
+.exp-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

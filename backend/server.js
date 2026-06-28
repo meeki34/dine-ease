@@ -68,14 +68,26 @@ app.use('/api/tenant', tenantRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/billing', billingRoutes);
 
-// Test route
-app.get('/', (req, res) => {
-    res.json({
-        message: 'DINE-EASE API is running!',
-        version: '2.0',
-        status: 'success'
+// Test route & Static Frontend Serving in Production
+if (process.env.NODE_ENV === 'production') {
+    const frontendDist = path.join(__dirname, '../frontend/dist');
+    app.use(express.static(frontendDist));
+    
+    app.get('/{*splat}', (req, res, next) => {
+        if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+            return next();
+        }
+        res.sendFile(path.join(frontendDist, 'index.html'));
     });
-});
+} else {
+    app.get('/', (req, res) => {
+        res.json({
+            message: 'DINE-EASE API is running!',
+            version: '2.0',
+            status: 'success'
+        });
+    });
+}
 
 // Port
 const PORT = process.env.PORT || 5000;

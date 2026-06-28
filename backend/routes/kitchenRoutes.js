@@ -10,7 +10,7 @@ router.get('/', protect, allowRoles('admin', 'manager', 'chef'), async (req, res
     const orders = await Order.findAll({
       where: {
         tenant_id: req.user.tenant_id,
-        status: ['pending', 'preparing']
+        status: ['pending', 'preparing', 'ready']
       },
       include: [{
         model: OrderItem,

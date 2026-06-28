@@ -1,0 +1,134 @@
+.pretext-masonry {
+  position: relative;
+  width: 100%;
+}
+
+.pretext-masonry-inner {
+  position: relative;
+  width: 100%;
+}
+
+/* Card base */
+.pm-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.pm-card.pm-card-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.pm-card:hover {
+  border-color: rgba(244, 140, 37, 0.3);
+  box-shadow:
+    0 8px 32px rgba(244, 140, 37, 0.12),
+    0 0 0 1px rgba(244, 140, 37, 0.15);
+  transform: translateY(-4px) scale(1);
+}
+
+/* Image */
+.pm-card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.pm-card-placeholder {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, rgba(244, 140, 37, 0.08), rgba(255, 107, 53, 0.04));
+}
+
+/* Body */
+.pm-card-body {
+  padding: 16px;
+}
+
+.pm-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.pm-card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 22px;
+  flex: 1;
+  margin: 0;
+}
+
+.pm-card-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f48c25;
+  white-space: nowrap;
+  line-height: 22px;
+}
+
+.pm-card-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 19px;
+  margin-top: 6px;
+}
+
+.pm-card-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 36px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f48c25, #ff6b35);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pm-card-add:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(244, 140, 37, 0.3);
+}
+
+.pm-card-add:active {
+  transform: scale(0.98);
+}
+
+/* Empty state */
+.pm-empty {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 40px 20px;
+  font-size: 14px;
+}
+
+/* Responsive: 1 column on small screens */
+@media (max-width: 480px) {
+  .pm-card-img {
+    height: 140px;
+  }
+  .pm-card-placeholder {
+    height: 100px;
+  }
+}
